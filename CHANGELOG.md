@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.3](https://github.com/paymo-org/node-active-window/compare/v2.1.2...v2.1.3) (2026-03-19)
+
+
+### Documentation
+
+* Updated references to repository ([780182f](https://github.com/paymo-org/node-active-window/commit/780182f0ac7676611f526164d9af27c3eb4748b1))
+
 ### [2.1.2](https://github.com/paymoapp/node-active-window/compare/v2.1.1...v2.1.2) (2024-12-16)
 
 
