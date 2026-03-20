@@ -2,7 +2,7 @@ variables:
   ADDON_BUILD_IMAGE: "gitlab.paymoapp.com:5555/envscripts/img-ubuntu-widget-build"
   GIT_SUBMODULE_STRATEGY: recursive
   GIT_DEPTH: 50
-  XCODE_TOOLS: "/Applications/Xcode14_3_1.app"
+  XCODE_TOOLS: "/Applications/Xcode.app"
 
 # Mixins
 .only_any_v_tags:
