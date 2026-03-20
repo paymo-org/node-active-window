@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.4](https://github.com/paymo-org/node-active-window/compare/v2.1.3...v2.1.4) (2026-03-20)
+
+
+### Build/CI
+
+* Changed XCode tools path used for build ([956b64f](https://github.com/paymo-org/node-active-window/commit/956b64f79e5a0320718be3e4ad73a0ef3c7c2cea))
+
 ### [2.1.3](https://github.com/paymo-org/node-active-window/compare/v2.1.2...v2.1.3) (2026-03-19)
 
 
