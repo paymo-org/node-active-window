@@ -1,0 +1,125 @@
+name: Deploy
+
+on:
+  pull_request:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: node-active-window-deploy
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+
+  build-addon:
+    name: Build addon (${{ matrix.name }})
+    needs: [lint, typecheck]
+    if: startsWith(github.ref, 'refs/tags/v')
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: windows-x64
+            os: windows-latest
+            prebuild_args: ''
+          - name: macos-x64
+            os: macos-13
+            prebuild_args: '--arch x64'
+          - name: macos-arm64
+            os: macos-14
+            prebuild_args: '--arch arm64'
+          - name: linux-x64
+            os: ubuntu-latest
+            prebuild_args: ''
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Prebuild and upload to GitHub Release
+        shell: bash
+        run: npm run prebuild -- ${{ matrix.prebuild_args }} --upload ${{ secrets.GITHUB_TOKEN }}
+
+  publish:
+    name: Publish
+    needs: [lint, typecheck, build-addon]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci --ignore-scripts
+      - run: npm run build:ts
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Extract changelog for this tag
+        id: changelog
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          PREV_TAG="$(git describe --abbrev=0 --tags "${TAG}^")"
+          {
+            echo 'body<<__CHANGELOG_EOF__'
+            git diff -U0 "$PREV_TAG" "$TAG" -- CHANGELOG.md \
+              | grep -E '^\+' \
+              | grep -vE '^\+\+\+' \
+              | grep -vE '^\+#+ \[' \
+              | sed 's/^\+//'
+            echo '__CHANGELOG_EOF__'
+          } >> "$GITHUB_OUTPUT"
+      - name: Update GitHub Release with changelog
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.body }}
+          prerelease: ${{ contains(github.ref_name, '-') }}
