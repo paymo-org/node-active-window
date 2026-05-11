@@ -8,3 +8,11 @@ node_modules/
 dist/
 **/build/
 prebuilds/
+
+npm-debug.log
+*.env
+.idea
+.vscode
+.DS_Store
+CLAUDE.md
+.claude
