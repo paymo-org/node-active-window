@@ -1,10 +1,4 @@
-# node modules
 node_modules/
-
-# eslint cache
-.eslintcache
-
-# build artifacts
 dist/
 **/build/
 prebuilds/

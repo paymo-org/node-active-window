@@ -1,20 +1,33 @@
 {
 	"compilerOptions": {
-		"target": "es6",
-		"module": "commonjs",
-		"lib": ["esnext", "DOM"],
-		"allowJs": true,
-		"rootDirs": ["src"],
-		"outDir": "dist",
-		"resolveJsonModule": true,
+		/* Language */
+		"target": "ES2022",
+		"lib": ["ES2022"],
+
+		/* Modules (Node-native) */
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+
+		/* Strictness */
 		"strict": true,
-		"skipLibCheck": true,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"moduleResolution": "node",
 		"isolatedModules": true,
-		"declaration": true,
-		"typeRoots": ["./typings", "./node_modules/@types"]
+		"noUncheckedIndexedAccess": true,
+		"exactOptionalPropertyTypes": true,
+
+		/* Code Quality */
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+
+		/* Output */
+		"noEmit": true,
+
+		/* Node sanity */
+		"types": ["node"],
+
+		/* Performance */
+		"skipLibCheck": true
 	},
-	"include": ["src", "demo"]
+	"include": ["src"]
 }

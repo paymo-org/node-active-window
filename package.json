@@ -1,35 +1,41 @@
 {
   "name": "@paymoapp/active-window",
   "version": "2.1.4",
+  "type": "module",
   "description": "NodeJS library using native modules to get the active window and some metadata (including the application icon) on Windows, MacOS and Linux.",
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "install": "prebuild-install -r napi || node-gyp rebuild",
-    "demo": "ts-node --project tsconfig.json demo/index.ts",
-    "build": "npm run clean && npm run build:ts && npm run build:gyp",
-    "build:ts": "tsc --project tsconfig.build.json",
-    "build:gyp": "node-gyp rebuild",
-    "prebuild": "prebuild --all -r napi --strip",
-    "clean": "node-gyp clean && rimraf dist",
+    "install": "node -e \"\"",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src",
     "typecheck": "tsc --noEmit",
-    "lint": "esw --color --ext .ts src demo",
-    "lint:fix": "esw --color --fix --ext .ts src demo",
-    "lint:watch": "esw --color --fix --watch --cache --ext .ts src demo",
-    "format": "prettier --write src demo",
-    "release": "standard-version",
-    "release:pre": "standard-version --prerelease",
-    "generate:readme-toc": "markdown-toc -i --bullets=\"-\" --maxdepth=4 README.md"
+    "clean": "hereby clean",
+    "build": "hereby build",
+    "build:ts": "hereby build:ts",
+    "prebuildify": "hereby prebuildify",
+    "generate:readme-toc": "markdown-toc -i --bullets=\"-\" --maxdepth=4 README.md",
+    "release": "commit-and-tag-version",
+    "release:pre": "commit-and-tag-version --prerelease"
   },
-  "binary": {
-    "napi_versions": [
-      6
-    ]
+  "engines": {
+    "node": ">=20.11"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
   },
   "files": [
-    "binding.gyp",
     "dist/",
-    "module/"
+    "prebuilds/"
   ],
   "repository": {
     "type": "git",
@@ -44,66 +50,25 @@
   "author": "Paymo SRL",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^17.0.35",
-    "@types/ws": "^8.5.3",
-    "@typescript-eslint/eslint-plugin": "^5.26.0",
-    "@typescript-eslint/parser": "^5.26.0",
-    "eslint": "^8.16.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-watch": "^8.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.4.0",
+    "commit-and-tag-version": "^13.1.2",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-simple-import-sort": "^14.0.0",
+    "execa": "^10.0.1",
+    "hereby": "^1.15.2",
     "markdown-toc": "^1.2.0",
-    "node-gyp": "^9.0.0",
-    "prebuild": "^13.0.1",
-    "prettier": "^2.6.2",
-    "rimraf": "^3.0.2",
-    "standard-version": "^9.5.0",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.6.4",
-    "ws": "^8.7.0"
+    "node-addon-api": "^8.9.2",
+    "node-gyp": "^13.0.2",
+    "prebuildify": "^6.0.1",
+    "prettier": "^3.9.6",
+    "tsdown": "^0.22.14",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.68.0"
   },
   "dependencies": {
-    "node-addon-api": "^5.0.0",
-    "prebuild-install": "^7.1.2"
-  },
-  "standard-version": {
-    "scripts": {
-      "prerelease": "git fetch --all --tags"
-    },
-    "types": [
-      {
-        "type": "feat",
-        "section": "Features"
-      },
-      {
-        "type": "fix",
-        "section": "Bug Fixes"
-      },
-      {
-        "type": "imp",
-        "section": "Improvements"
-      },
-      {
-        "type": "ci",
-        "section": "Build/CI"
-      },
-      {
-        "type": "chore",
-        "hidden": true
-      },
-      {
-        "type": "docs",
-        "section": "Documentation"
-      },
-      {
-        "type": "refactor",
-        "section": "Refactor"
-      },
-      {
-        "type": "test",
-        "section": "Testing"
-      }
-    ]
+    "node-gyp-build": "^4.8.4"
   }
 }

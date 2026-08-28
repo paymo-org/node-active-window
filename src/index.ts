@@ -1,26 +1,7 @@
-import type {
-	Module,
-	NativeWindowInfo,
-	WindowInfo,
-	IActiveWindow,
-	InitializeOptions
-} from './types';
+import addon from './addon.js';
+import { InitializeOptions, NativeWindowInfo, WindowInfo } from './types.js';
 
-const SUPPORTED_PLATFORMS = ['win32', 'linux', 'darwin'];
-
-let addon: Module<NativeWindowInfo> | undefined;
-
-if (SUPPORTED_PLATFORMS.includes(process.platform)) {
-	addon = require('../build/Release/PaymoActiveWindow.node'); // eslint-disable-line import/no-dynamic-require
-} else {
-	throw new Error(
-		`Unsupported platform. The supported platforms are: ${SUPPORTED_PLATFORMS.join(
-			','
-		)}`
-	);
-}
-
-class ActiveWindowClass implements IActiveWindow {
+class ActiveWindowClass {
 	private options: InitializeOptions = {};
 
 	private encodeWindowInfo(info: NativeWindowInfo): WindowInfo {
@@ -36,7 +17,7 @@ class ActiveWindowClass implements IActiveWindow {
 							isUWPApp: info['windows.isUWPApp'] || false,
 							uwpPackage: info['windows.uwpPackage'] || ''
 						}
-				  }
+					}
 				: {})
 		};
 	}
@@ -128,6 +109,6 @@ class ActiveWindowClass implements IActiveWindow {
 
 const ActiveWindow = new ActiveWindowClass();
 
-export * from './types';
+export * from './types.js';
 export { ActiveWindow };
 export default ActiveWindow;

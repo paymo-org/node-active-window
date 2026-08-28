@@ -8,6 +8,15 @@ export interface NativeWindowInfo {
 	'windows.uwpPackage'?: string;
 }
 
+export interface Addon {
+	getActiveWindow(): NativeWindowInfo;
+	subscribe(callback: (windowInfo: NativeWindowInfo | null) => void): number;
+	unsubscribe(watchId: number): void;
+	initialize?(): void;
+	requestPermissions?(): boolean;
+	runLoop?(): void;
+}
+
 export interface WindowInfo {
 	title: string;
 	application: string;
@@ -20,20 +29,6 @@ export interface WindowInfo {
 	};
 }
 
-export interface Module<T> {
-	getActiveWindow(): T;
-	subscribe(callback: (windowInfo: T | null) => void): number;
-	unsubscribe(watchId: number): void;
-	initialize?(): void;
-	requestPermissions?(): boolean;
-	runLoop?(): void;
-}
-
 export interface InitializeOptions {
 	osxRunLoop?: false | 'get' | 'all';
-}
-
-export interface IActiveWindow extends Omit<Module<WindowInfo>, 'runLoop'> {
-	initialize(opts?: InitializeOptions): void;
-	requestPermissions(): boolean;
 }

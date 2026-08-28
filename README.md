@@ -46,15 +46,17 @@ NodeJS library using native modules to get the active window and some metadata (
 npm install --save @paymoapp/active-window
 ```
 
+The library requires NodeJS 20.11 or newer and is published as a dual ESM / CommonJS package, so you can use it both with `import` and `require`.
+
 #### Native addon
 
 This project uses NodeJS Native Addons to function, so you can use this library in any NodeJS or Electron project, there won't be any problem with bundling and code signing.
 
-The project uses [prebuild](https://github.com/prebuild/prebuild) to supply prebuilt libraries.
+The project uses [prebuildify](https://github.com/prebuild/prebuildify) to ship prebuilt binaries inside the npm package, so nothing needs to be downloaded or compiled when you install the library. The correct binary for your platform is selected automatically at runtime using [node-gyp-build](https://github.com/prebuild/node-gyp-build). Prebuilt binaries are available for Windows (x64, arm64), MacOS (x64, arm64) and Linux (x64, arm64).
 
 The project uses Node-API version 6, you can check [this table](https://nodejs.org/api/n-api.html#node-api-version-matrix) to see which node versions are supported.
 
-If there's a compliant prebuilt binary, it will be downloaded during installation, or it will be built. You can also rebuild it anytime by running `npm run build:gyp`.
+If you're working on the library itself, you can rebuild the native addon anytime by running `npx hereby build:gyp`.
 
 The library has native addons for all the three major operating systems: Windows, MacOS and Linux. For Linux, only the X11 windowing system is supported.
 
@@ -67,8 +69,6 @@ On MacOS you need to check for the screen recording permission (using [`requestP
 Then you can use the [`getActiveWindow`](#𝑓--getactivewindow) or [`subscribe`](#𝑓--subscribe) methods to fetch the current active window or watch for window changes.
 
 #### Example
-
-You can run a demo application by calling `npm run demo`. You can browse it's source code for a detailed example using the watch API in `demo/index.ts`.
 
 ```ts
 import ActiveWindow from '@paymoapp/active-window';
@@ -127,10 +127,7 @@ None of the parameters are nullable, even if their value couldn't be fetched, th
 ###### 𝑓 &nbsp;&nbsp; getActiveWindow
 
 ```ts
-interface IActiveWindow {
-	getActiveWindow(): WindowInfo
-	// ...
-}
+ActiveWindow.getActiveWindow(): WindowInfo
 ```
 
 Requests the current foreground window in a synchronous way. It will throw an error if the current window couldn't be fetched (for example there're no focused windows at the moment).
@@ -138,10 +135,7 @@ Requests the current foreground window in a synchronous way. It will throw an er
 ###### 𝑓 &nbsp;&nbsp; subscribe
 
 ```ts
-interface IActiveWindow {
-	subscribe(callback: (windowInfo: WindowInfo | null) => void): number;
-	// ...
-}
+ActiveWindow.subscribe(callback: (windowInfo: WindowInfo | null) => void): number
 ```
 
 Subscribe to changes of the active window. The supplied callback will be called with `null` if there're no focused windows at the moment.
@@ -151,10 +145,7 @@ The function returns a number representing the ID of the watch. You should store
 ###### 𝑓 &nbsp;&nbsp; unsubscribe
 
 ```ts
-interface IActiveWindow {
-	unsubscribe(watchId: number): void;
-	// ...
-}
+ActiveWindow.unsubscribe(watchId: number): void
 ```
 
 Remove the event listener associated with the supplied watch ID. Use this to unsubscribe from the active window changed events.
@@ -162,10 +153,7 @@ Remove the event listener associated with the supplied watch ID. Use this to uns
 ###### 𝑓 &nbsp;&nbsp; initialize
 
 ```ts
-interface IActiveWindow {
-	initialize(opts?: { osxRunLoop: false | 'get' | 'all' }): void;
-	// ...
-}
+ActiveWindow.initialize(opts?: { osxRunLoop?: false | 'get' | 'all' }): void
 ```
 
 On some platforms (Linux) the library needs some initialization to be done. You must call this function before doing anything with the library regardless of the current platform.
@@ -180,10 +168,7 @@ Possible values for `osxRunLoop`:
 ###### 𝑓 &nbsp;&nbsp; requestPermissions
 
 ```ts
-interface IActiveWindow {
-	requestPermissions(): boolean;
-	// ...
-}
+ActiveWindow.requestPermissions(): boolean
 ```
 
 On the MacOS platform you need to request screen recording permission to fetch the title of the current window.

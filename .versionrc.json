@@ -1,0 +1,39 @@
+{
+    "scripts": {
+        "prerelease": "git fetch --all --tags"
+    },
+    "types": [
+        {
+            "type": "feat",
+            "section": "Features"
+        },
+        {
+            "type": "fix",
+            "section": "Bug Fixes"
+        },
+        {
+            "type": "imp",
+            "section": "Improvements"
+        },
+        {
+            "type": "ci",
+            "section": "Build/CI"
+        },
+        {
+            "type": "chore",
+            "hidden": true
+        },
+        {
+            "type": "docs",
+            "section": "Documentation"
+        },
+        {
+            "type": "refactor",
+            "section": "Refactor"
+        },
+        {
+            "type": "test",
+            "section": "Testing"
+        }
+    ]
+}
