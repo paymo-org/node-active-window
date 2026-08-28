@@ -1,7 +1,12 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.0](https://github.com/paymo-org/node-active-window/compare/v2.1.4...v2.2.0) (2026-08-28)
+
+### Features
+
+* Added dual MJS/CJS builds, modernized toolkit ([a470716](https://github.com/paymo-org/node-active-window/commit/a47071697978eb9cd4980ba47343533eee3ab30c))
 ### [2.1.4](https://github.com/paymo-org/node-active-window/compare/v2.1.3...v2.1.4) (2026-03-20)
 
 
